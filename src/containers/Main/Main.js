@@ -6,9 +6,10 @@ import Menu from '../../components/Menu';
 import styles from './Main.style';
 import {getCategories, getPostsByCategory, getPosts} from '../../constants/api';
 import logo from '../../assets/images/dark-logo.png';
+import banner from '../../assets/images/wallpaper.jpeg';
 
 const Listing = () => {
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState({});
   const [category, setCategory] = useState({});
   // const [posts, setPosts] = useState({});
   // const [post, setPost] = useState({});
@@ -22,7 +23,7 @@ const Listing = () => {
       setCategory(categories.data)
 
       let posts = await getPosts();
-      setContent(posts.data.feed.entry)
+      setContent(posts.data.items);
 
       setLoading(false);
     };
@@ -39,20 +40,28 @@ const Listing = () => {
   }
 
   const displayPosts = () => {
-
     return content.map( (item, key) => {
-      console.log(item);
+      console.log(item)
+      // get image for banner
+      let getImage = (item.content).match(/<img [^>]*src="[^"]*"[^>]*>/g) // find img tag
+      let getImageSource = !isEmpty(getImage) ? getImage[0].replace(/.*src="([^"]*)".*/, '$1') : banner;
 
-      let thumbnail = isEmpty(item.media$thumbnail) ? logo : item.media$thumbnail.url;
+      let getFirstParagraph = (item.content).match(/<(\w+)>(.*?)<\/\1>/igm) || [item.content];
+
+      console.log(getFirstParagraph[0], getFirstParagraph.length);
+
       return (
-        <Card key={key} style={{ width: '18rem' }}>
-          <Card.Img variant="top" src={thumbnail} />
-          <Card.Body>
-            <Card.Title>{item.title.$t}</Card.Title>
-            {/* <Card.Text>{item.content.$t}</Card.Text> */}
-            <Button variant="primary">Read more</Button>
-          </Card.Body>
-        </Card>
+        <Col lg={4} md={4} key={key} >
+          <Card >
+            <Card.Img variant="top" src={getImageSource} />
+            <Card.Body>
+              <Card.Title>{item.title}</Card.Title>
+              {/* <Card.Text className='text-truncate'><span dangerouslySetInnerHTML={{ __html: getFirstParagraph[0] }} /></Card.Text> */}
+              <Card.Text className='truncate'>Praeterea iter est quasdam res quas ex communi. Praeterea iter est quasdam res quas ex communi.Praeterea iter est quasdam res quas ex communi.Praeterea iter est quasdam res quas ex communi.</Card.Text>
+              <Button href={`/post?id=${item.id}`} variant="primary">Read more</Button>
+            </Card.Body>
+          </Card>
+        </Col>
       );
     } )
   } 
@@ -77,7 +86,7 @@ const Listing = () => {
         <Col lg={12} className='content'>
           <Row>
             <Col sm={12} md={8} lg={8}>
-              <ListGroup>{!loading && displayPosts()}</ListGroup>
+              <Row>{!loading && displayPosts()}</Row>
               {loading && 'Loading...'}
             </Col>
             <Col sm={12} md={4} lg={4}>

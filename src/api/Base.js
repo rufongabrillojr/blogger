@@ -190,6 +190,6 @@ export const sendRequest = async ({path, method = 'GET', data = {}, base, header
     };
     console.log(output);
     return output;
-  };
+};
 
 

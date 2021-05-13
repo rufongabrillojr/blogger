@@ -1,6 +1,6 @@
 import {key, id, googleapis, blogger} from '../constants/key';
 import {sendRequest} from '../api/Base';
-let cors = 'https://cors-anywhere.herokuapp.com';
+// let cors = 'https://cors-anywhere.herokuapp.com';
 // let cors = 'https://api.codetabs.com/v1/proxy?quest=';
 
 export const getCategories = () => {
@@ -13,15 +13,15 @@ export const getCategories = () => {
 
 export const getPosts = () => {
   return sendRequest({
-    base: `${cors}/${blogger}`,
-    path: `/feeds/${id}/posts/default?alt=json&?key=${key}`,
+    base: googleapis,
+    path: `/blogger/v3/blogs/${id}/posts?key=${key}`,
     method: 'GET',
   });  
 }
 
 export const getPostsByCategory = (category) => {
   return sendRequest({
-    base: `${cors}/${blogger}`,
+    base: googleapis,
     path: `/feeds/${id}/posts/default?alt=json&?key=${key}&q=label:${category}`,
     method: 'GET',
   });  
@@ -30,7 +30,7 @@ export const getPostsByCategory = (category) => {
 export const getPost = (post) => {
   return sendRequest({
     base: googleapis,
-    path: `/blogger/v3/blogs/${id}?key=${key}`,
+    path: `/blogger/v3/blogs/${id}/posts/${post}?key=${key}`,
     
     method: 'GET',
   });  
