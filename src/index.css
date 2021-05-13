@@ -1,0 +1,335 @@
+@keyframes listingScrollAnimation {
+  from {
+    background: #00000000 !important;
+  }
+  to {
+    background: #ccc !important;
+  }
+}
+
+/* customizing scroll bar */
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 6px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: 'flex';
+  flex: 1;
+  background-color: whitesmoke;
+}
+
+button:hover,
+.clickable-list-item {
+  cursor: pointer;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+input {
+  border: none;
+}
+
+input:focus,
+button:focus {
+  outline: none;
+}
+
+button {
+  border: none;
+  background: none;
+}
+
+p {
+  margin: 0;
+  /* line-height: 15px; */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+.header-tabs:hover {
+  background-color: deeppink;
+}
+
+.navlink:hover {
+  background-color: pink;
+}
+
+.content{
+  max-width: 1024px !important;
+  margin: 0 auto;
+}
+
+.banner{
+  background-color: #232645;
+  padding-bottom: 50px;
+  background: url('./assets/images/wallpaper.jpeg') no-repeat;
+  background-size: cover;
+}
+
+.banner .content{
+  min-height: 400px;
+}
+
+.propsListing, .propsInformation{
+  height: 90vh;
+  overflow-y: scroll;
+}
+
+.propsListing:hover{
+  /* animation: listingScrollAnimation forwards; */
+  /* animation-duration: 2s; */
+}
+
+.propsListing::-webkit-scrollbar-track, .propsInformation::-webkit-scrollbar-track {
+  background: #00000000 !important; 
+}
+
+.propsListing::-webkit-scrollbar-thumb, .propsInformation::-webkit-scrollbar-thumb {
+  background: #00000000 !important; 
+}
+
+.propsListing:hover::-webkit-scrollbar-thumb, .propsInformation:hover::-webkit-scrollbar-thumb {
+  background: #333 !important;
+  animation: fadeIn 1s ease-in-out 3s;
+  animation-fill-mode: forwards;  
+}
+
+.propsListing div.prop:last-child .propsLine{
+  border: none;
+}
+
+.propsListing::before{
+  content: " ";
+  display: block;
+  height: 100px;
+  position: sticky;
+  top: 0px;
+  height: 50px;
+  width: inherit;
+  z-index: 99;
+  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #00000000 100%);
+}
+.propsListing::after{
+  /* content: " "; */
+  display: block;
+  height: 100px;
+  position: sticky;
+  bottom: 0px;
+  height: 50px;
+  width: inherit;
+  z-index: 99;
+  background: #ffffff;
+  background: linear-gradient(180deg, #00000000 0%, #ffffff 100%);
+}
+
+.propsLine{
+  display: block;
+  margin: 0.25rem 0rem;
+  width: 100%;
+  border-bottom: 1px solid #eee;
+}
+
+.propCard.card{
+  display: inline-block;
+  width: 100%;
+  background-color: #fff;
+  background-clip: border-box;
+  border: none;
+  border-radius: 1rem;
+}
+
+.propCard.card:hover{
+  background-color: #ff000017;
+  cursor: pointer;
+}
+
+.propCard.card.active{
+  background-color: #ff000030;
+}
+
+.propertyThumbnail{
+  display: inline-block;
+  height: 100px;
+  width: inherit;
+  border-radius: 1rem;
+  margin: 5px 5px 0px 5px;
+  overflow: hidden;
+}
+
+.propCard img{
+  height: 100%;
+  width: unset;
+}
+
+.propCard .card-body{
+  display: inline-block;
+  padding: 10px;
+}
+
+.propCard .card-body .propName{
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: bold;
+}
+
+.propCard .card-body .propPrice{
+  font-size: 10px;
+  /* color: #ccc; */
+  text-align: right;
+  font-weight: bold;
+}
+
+.propCard .card-body .propDesc{
+  font-size: 10px;
+  color: #808080;
+}
+
+.truncate{
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.contact-form{
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.horizontal-line{
+  height: 1px;
+  background: #e4e4e4;
+  margin: 20px 0px;
+}
+
+.testimonial-image{
+  width: 100px;
+  height: 100px;
+}
+
+.listingDescription{
+  left: -50px;
+  font-family: initial;
+  position: relative;
+  background: inherit;
+  overflow: hidden;
+  background: #fff;
+  padding: 5px;
+}
+
+.listingDescription h2{
+  font-style: italic;
+  font-size: 20px;
+}
+
+.propsListing .swiper-slide img{
+  position: absolute;
+  top: 0;
+}
+
+.swiper-cube-shadow{
+  display: none;
+}
+
+.swiperController{
+  
+}
+
+.swiper-button-prev, .swiper-button-next {
+  display: inline-block;
+  position: relative;
+      /* float: right; */
+  transform: translateY(100%);
+  z-index: 9;
+}
+
+.swiper-button-prev::after, .swiper-button-next::after{
+  content: " ";
+  display: block;
+  height: 50px;
+  width: 50px;
+  background-size: contain  !important;
+  background: url('assets/images/chevron-left.svg') no-repeat;
+}
+
+.swiper-button-prev::after{
+  background: url('assets/images/chevron-left.svg') no-repeat;
+}
+
+.swiper-button-next::after{
+  background: url('assets/images/chevron-right.svg') no-repeat;
+}
+
+.swiper-button-prev:active, .swiper-button-next:active {
+  filter: invert(1);
+  background: #fff;
+}
+
+button{
+  border-radius: unset !important;
+  background: #000 !important;
+  border: transparent !important;
+}
+
+.swiper-slide{
+  width: 100%  !important;
+}
+
+.count{
+  float: right;
+  background: #fff !important;
+  color: #000 !important;
+}
+
+
+.listingDescription .btn::after{
+  content: " ";
+  background: url(/static/media/arrow-right-short.9f81b0bb.svg) no-repeat;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  filter: invert(1);
+  top: 50%;
+  position: relative;
+  float: right;
+}
