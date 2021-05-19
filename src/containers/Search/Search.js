@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {isEqual, isEmpty} from 'lodash';
 import { Container, Row, Col, Image, Card, Button, Carousel, Form, ListGroup } from 'react-bootstrap';
 import Menu from '../../components/Menu';
-import styles from './Main.style';
-import {getCategories, getPostsByCategory, getPosts} from '../../constants/api';
+import styles from './Search.style';
+import {searchPost} from '../../constants/api';
 import logo from '../../assets/images/dark-logo.png';
 import banner from '../../assets/images/wallpaper.jpeg';
 
@@ -16,16 +16,17 @@ const Listing = () => {
 
   const [loading, setLoading]  = useState(true);
 
-  // get categories
   useEffect( () => {
     let blog = async () => { 
-      let categories = await getCategories();
-      let loadedContents = localStorage.getItem('blogContent');
+      let reg = /^\?q=/g;
+      let search = (window.location.search).replace(reg, ''); // added parenthesis for readability
+
+      let loadedContents = localStorage.getItem('searchBlogContent');
 
       let posts = [];
 
       if(isEmpty(loadedContents)){
-        posts  =  await getPosts()
+        posts  =  await searchPost(search)
 
         let {items, nextPageToken} = posts.data;
         posts = items;
@@ -39,27 +40,19 @@ const Listing = () => {
         setPageToken(pageToken); 
       }
 
-      setCategory(categories.data);
       setContent(posts);
-      setLoading(false);
     };
 
     blog();
   }, [] )
 
-  const nextBlogs = async () => {
-    let posts = await getPosts(pageToken);
-    let {items, nextPageToken} = posts.data;
-    setContent([...content, items[0]]);
-    setPageToken(nextPageToken); 
-    localStorage.setItem('pageToken', (nextPageToken != undefined) ? nextPageToken :  'no token');
-  }
-
-  const displayCategories = () => {
-    return category.map( (item, key) => {
-      return <ListGroup.Item key={key}>{item}</ListGroup.Item>;
-    } )
-  }
+  // const nextBlogs = async () => {
+  //   let posts = await getPosts(pageToken);
+  //   let {items, nextPageToken} = posts.data;
+  //   setContent([...content, items[0]]);
+  //   setPageToken(nextPageToken); 
+  //   localStorage.setItem('pageToken', (nextPageToken != undefined) ? nextPageToken :  'no token');
+  // }
 
   const displayPosts = () => {
 
@@ -87,6 +80,7 @@ const Listing = () => {
     } )
   }
 
+
   return (
     <Container fluid>
       <Row>
@@ -95,12 +89,9 @@ const Listing = () => {
             <Col lg={12} className='content'>
               <Menu />
             </Col>
-            <Col lg={12} className='banner'>
+            <Col lg={12} className='banner' style={{background: `url(${banner})`}}>
               <div className='content'>
-                <div className='search'>
-                  <input type='text' placeholder='Search' onChange={(e) => { setSearch(e.target.value) }} value={search}/>
-                  <Button href={`/search?q=${search}`} variant="primary">Search</Button>
-                </div>
+                Search Result
               </div>
             </Col>
           </Row>
@@ -110,13 +101,10 @@ const Listing = () => {
         <Col lg={12} className='content'>
           <Row>
             <Col sm={12} md={8} lg={8}>
-              <Row>{!loading && displayPosts()}</Row>
-              {loading && 'Loading...'}
-              { (pageToken != 'no token' && (pageToken != undefined)) && <Button variant="primary" onClick={ () => { nextBlogs() } } >Load more</Button> }
+              {/* {!loading && displayPosts()} */}
             </Col>
             <Col sm={12} md={4} lg={4}>
-              <ListGroup>{!loading && displayCategories()}</ListGroup>
-              {loading && 'Loading...'}
+              ads here
             </Col>
           </Row>
         </Col>
