@@ -11,6 +11,7 @@ import banner from '../../assets/images/wallpaper.jpeg';
 const Listing = () => {
   const [content, setContent] = useState({});
   const [category, setCategory] = useState({});
+  const [pageToken, setPageToken] = useState('');
   // const [posts, setPosts] = useState({});
   // const [post, setPost] = useState({});
   // const [postByCategory, setPostByCategory] = useState({});
@@ -20,16 +21,23 @@ const Listing = () => {
   useEffect( () => {
     let blog = async () => { 
       let categories = await getCategories();
-      setCategory(categories.data)
-
       let posts = await getPosts();
-      setContent(posts.data.items);
 
+      setPageToken(posts.data.nextPageToken); 
+      setCategory(categories.data);
+      setContent(posts.data.items);
       setLoading(false);
     };
 
     blog();
   }, [] )
+
+  const nextBlogs = async () => {
+    let posts = await getPosts(pageToken);
+    let {items, nextPageToken} = posts.data;
+    setContent([items[0], ...content]);
+    setPageToken(nextPageToken); 
+  }
 
   const displayCategories = () => {
     console.log(category, loading)
@@ -41,14 +49,13 @@ const Listing = () => {
 
   const displayPosts = () => {
     return content.map( (item, key) => {
-      console.log(item)
       // get image for banner
       let getImage = (item.content).match(/<img [^>]*src="[^"]*"[^>]*>/g) // find img tag
       let getImageSource = !isEmpty(getImage) ? getImage[0].replace(/.*src="([^"]*)".*/, '$1') : banner;
 
       let getFirstParagraph = (item.content).match(/<(\w+)>(.*?)<\/\1>/igm) || [item.content];
 
-      console.log(getFirstParagraph[0], getFirstParagraph.length);
+      // console.log(getFirstParagraph[0], getFirstParagraph.length);
 
       return (
         <Col lg={4} md={4} key={key} >
@@ -64,7 +71,9 @@ const Listing = () => {
         </Col>
       );
     } )
-  } 
+  }
+
+  console.log(content,  pageToken);
 
   return (
     <Container fluid>
@@ -88,6 +97,7 @@ const Listing = () => {
             <Col sm={12} md={8} lg={8}>
               <Row>{!loading && displayPosts()}</Row>
               {loading && 'Loading...'}
+              { (pageToken != undefined) && <Button variant="primary" onClick={ () => { nextBlogs() } } >Load more</Button> }
             </Col>
             <Col sm={12} md={4} lg={4}>
               <ListGroup>{!loading && displayCategories()}</ListGroup>

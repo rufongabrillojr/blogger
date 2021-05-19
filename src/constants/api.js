@@ -1,5 +1,8 @@
+import {isEqual, isEmpty} from 'lodash';
+
 import {key, id, googleapis, blogger} from '../constants/key';
 import {sendRequest} from '../api/Base';
+
 // let cors = 'https://cors-anywhere.herokuapp.com';
 // let cors = 'https://api.codetabs.com/v1/proxy?quest=';
 
@@ -11,10 +14,14 @@ export const getCategories = () => {
   });  
 }
 
-export const getPosts = () => {
+export const getPosts = (pageToken = '') => {
+
+  console.log(pageToken);
+  pageToken = !isEmpty(pageToken) ? `&pageToken=${pageToken}` : '';
+
   return sendRequest({
     base: googleapis,
-    path: `/blogger/v3/blogs/${id}/posts?key=${key}`,
+    path: `/blogger/v3/blogs/${id}/posts?key=${key}&maxResults=1${pageToken}`,
     method: 'GET',
   });  
 }
@@ -31,7 +38,14 @@ export const getPost = (post) => {
   return sendRequest({
     base: googleapis,
     path: `/blogger/v3/blogs/${id}/posts/${post}?key=${key}`,
-    
+    method: 'GET',
+  });  
+}
+
+export const searchPost = (query) => {
+  return sendRequest({
+    base: googleapis,
+    path: `/blogger/v3/blogs/${id}/posts/search?q=${query}?key=${key}`,    
     method: 'GET',
   });  
 }
