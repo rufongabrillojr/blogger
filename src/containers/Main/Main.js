@@ -9,23 +9,37 @@ import logo from '../../assets/images/dark-logo.png';
 import banner from '../../assets/images/wallpaper.jpeg';
 
 const Listing = () => {
-  const [content, setContent] = useState({});
+  const [content, setContent] = useState([]);
   const [category, setCategory] = useState({});
   const [pageToken, setPageToken] = useState('');
-  // const [posts, setPosts] = useState({});
-  // const [post, setPost] = useState({});
-  // const [postByCategory, setPostByCategory] = useState({});
+
   const [loading, setLoading]  = useState(true);
 
   // get categories
   useEffect( () => {
     let blog = async () => { 
       let categories = await getCategories();
-      let posts = await getPosts();
+      let loadedContents = localStorage.getItem('blogContent');
 
-      setPageToken(posts.data.nextPageToken); 
+      let posts = [];
+
+      if(isEmpty(loadedContents)){
+        posts  =  await getPosts()
+
+        let {items, nextPageToken} = posts.data;
+        posts = items;
+        
+        setPageToken(nextPageToken); 
+        localStorage.setItem('pageToken', nextPageToken);
+      }
+      else{
+        let pageToken = localStorage.getItem('pageToken');
+        posts = JSON.parse(loadedContents); 
+        setPageToken(pageToken); 
+      }
+
       setCategory(categories.data);
-      setContent(posts.data.items);
+      setContent(posts);
       setLoading(false);
     };
 
@@ -35,27 +49,27 @@ const Listing = () => {
   const nextBlogs = async () => {
     let posts = await getPosts(pageToken);
     let {items, nextPageToken} = posts.data;
-    setContent([items[0], ...content]);
+    setContent([...content, items[0]]);
     setPageToken(nextPageToken); 
+    localStorage.setItem('pageToken', (nextPageToken != undefined) ? nextPageToken :  'no token');
   }
 
   const displayCategories = () => {
-    console.log(category, loading)
-
     return category.map( (item, key) => {
       return <ListGroup.Item key={key}>{item}</ListGroup.Item>;
     } )
   }
 
   const displayPosts = () => {
+
+    // saves the loaded contents
+    localStorage.setItem('blogContent', JSON.stringify(content));
+
     return content.map( (item, key) => {
       // get image for banner
       let getImage = (item.content).match(/<img [^>]*src="[^"]*"[^>]*>/g) // find img tag
       let getImageSource = !isEmpty(getImage) ? getImage[0].replace(/.*src="([^"]*)".*/, '$1') : banner;
-
       let getFirstParagraph = (item.content).match(/<(\w+)>(.*?)<\/\1>/igm) || [item.content];
-
-      // console.log(getFirstParagraph[0], getFirstParagraph.length);
 
       return (
         <Col lg={4} md={4} key={key} >
@@ -63,8 +77,7 @@ const Listing = () => {
             <Card.Img variant="top" src={getImageSource} />
             <Card.Body>
               <Card.Title>{item.title}</Card.Title>
-              {/* <Card.Text className='text-truncate'><span dangerouslySetInnerHTML={{ __html: getFirstParagraph[0] }} /></Card.Text> */}
-              <Card.Text className='truncate'>Praeterea iter est quasdam res quas ex communi. Praeterea iter est quasdam res quas ex communi.Praeterea iter est quasdam res quas ex communi.Praeterea iter est quasdam res quas ex communi.</Card.Text>
+              <Card.Text className='truncate'><span dangerouslySetInnerHTML={{ __html: getFirstParagraph[0] }} /></Card.Text>
               <Button href={`/post?id=${item.id}`} variant="primary">Read more</Button>
             </Card.Body>
           </Card>
@@ -97,7 +110,7 @@ const Listing = () => {
             <Col sm={12} md={8} lg={8}>
               <Row>{!loading && displayPosts()}</Row>
               {loading && 'Loading...'}
-              { (pageToken != undefined) && <Button variant="primary" onClick={ () => { nextBlogs() } } >Load more</Button> }
+              { (pageToken != 'no token' && (pageToken != undefined)) && <Button variant="primary" onClick={ () => { nextBlogs() } } >Load more</Button> }
             </Col>
             <Col sm={12} md={4} lg={4}>
               <ListGroup>{!loading && displayCategories()}</ListGroup>

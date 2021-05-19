@@ -15,7 +15,6 @@ export const getCategories = () => {
 }
 
 export const getPosts = (pageToken = '') => {
-
   console.log(pageToken);
   pageToken = !isEmpty(pageToken) ? `&pageToken=${pageToken}` : '';
 

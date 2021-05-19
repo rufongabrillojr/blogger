@@ -223,15 +223,11 @@ h6 {
 }
 
 .truncate{
-  /* overflow: hidden; */
-  /* display: -webkit-box; */
+  display: -webkit-box;
   -webkit-line-clamp: 3;
-  /* -webkit-box-orient: vertical; */
-
-  white-space: nowrap;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .contact-form{
