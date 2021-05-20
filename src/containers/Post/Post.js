@@ -11,9 +11,6 @@ import banner from '../../assets/images/wallpaper.jpeg';
 const Listing = () => {
   const [post, setPost] = useState({});
   const [banner, setBanner] = useState({});
-  // const [posts, setPosts] = useState({});
-  // const [post, setPost] = useState({});
-  // const [postByCategory, setPostByCategory] = useState({});
   const [loading, setLoading]  = useState(true);
 
   // get categories
@@ -45,8 +42,6 @@ const Listing = () => {
     );
   }
 
-
-
   return (
     <Container fluid>
       <Row>
@@ -57,7 +52,6 @@ const Listing = () => {
             </Col>
             <Col lg={12} className='banner' style={{background: `url(${banner})`}}>
               <div className='content'>
-                <input type='text' placeholder='Search' />
               </div>
             </Col>
           </Row>

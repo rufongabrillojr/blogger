@@ -6,6 +6,8 @@ import {sendRequest} from '../api/Base';
 // let cors = 'https://cors-anywhere.herokuapp.com';
 // let cors = 'https://api.codetabs.com/v1/proxy?quest=';
 
+const itemLimit = 1;
+
 export const getCategories = () => {
   return sendRequest({
     base: `https://sgrealties-a2b77.firebaseio.com`,
@@ -20,7 +22,7 @@ export const getPosts = (pageToken = '') => {
 
   return sendRequest({
     base: googleapis,
-    path: `/blogger/v3/blogs/${id}/posts?key=${key}&maxResults=1${pageToken}`,
+    path: `/blogger/v3/blogs/${id}/posts?key=${key}&maxResults=${itemLimit}${pageToken}`,
     method: 'GET',
   });  
 }
@@ -44,7 +46,7 @@ export const getPost = (post) => {
 export const searchPost = (query) => {
   return sendRequest({
     base: googleapis,
-    path: `/blogger/v3/blogs/${id}/posts/search?q=${query}?key=${key}`,    
+    path: `/blogger/v3/blogs/${id}/posts/search?q=${query}&key=${key}`,    
     method: 'GET',
   });  
 }
