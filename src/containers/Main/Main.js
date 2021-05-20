@@ -16,7 +16,6 @@ const Listing = () => {
 
   const [loading, setLoading]  = useState(true);
 
-  // get categories
   useEffect( () => {
     let blog = async () => { 
       let categories = await getCategories();
@@ -112,7 +111,7 @@ const Listing = () => {
             <Col sm={12} md={8} lg={8}>
               <Row>{!loading && displayPosts()}</Row>
               {loading && 'Loading...'}
-              { (pageToken != 'no token' && (pageToken != undefined)) && <Button variant="primary" onClick={ () => { nextBlogs() } } >Load more</Button> }
+              { ((pageToken != 'no token') && (pageToken != undefined) && (pageToken != 'undefined')) && <Button variant="primary" onClick={ () => { nextBlogs() } } >Load more</Button> }
             </Col>
             <Col sm={12} md={4} lg={4}>
               <ListGroup>{!loading && displayCategories()}</ListGroup>

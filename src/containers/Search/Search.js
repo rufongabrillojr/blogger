@@ -20,47 +20,23 @@ const Listing = () => {
     let blog = async () => { 
       let reg = /^\?q=/g;
       let search = (window.location.search).replace(reg, ''); // added parenthesis for readability
-
-      let loadedContents = localStorage.getItem('searchBlogContent');
-
       let posts = [];
 
-      if(isEmpty(loadedContents)){
-        posts  =  await searchPost(search)
+      posts  =  await searchPost(search)
+      let {items} = posts.data;
 
-        let {items, nextPageToken} = posts.data;
-        posts = items;
-        
-        setPageToken(nextPageToken); 
-        localStorage.setItem('pageToken', nextPageToken);
-      }
-      else{
-        let pageToken = localStorage.getItem('pageToken');
-        posts = JSON.parse(loadedContents); 
-        setPageToken(pageToken); 
-      }
-
-      setContent(posts);
+      setContent(items);
+      setLoading(false);
     };
 
     blog();
   }, [] )
 
-  // const nextBlogs = async () => {
-  //   let posts = await getPosts(pageToken);
-  //   let {items, nextPageToken} = posts.data;
-  //   setContent([...content, items[0]]);
-  //   setPageToken(nextPageToken); 
-  //   localStorage.setItem('pageToken', (nextPageToken != undefined) ? nextPageToken :  'no token');
-  // }
-
   const displayPosts = () => {
 
-    // saves the loaded contents
-    localStorage.setItem('blogContent', JSON.stringify(content));
-
+    console.log(content);
     return content.map( (item, key) => {
-      // get image for banner
+
       let getImage = (item.content).match(/<img [^>]*src="[^"]*"[^>]*>/g) // find img tag
       let getImageSource = !isEmpty(getImage) ? getImage[0].replace(/.*src="([^"]*)".*/, '$1') : banner;
       let getFirstParagraph = (item.content).match(/<(\w+)>(.*?)<\/\1>/igm) || [item.content];
@@ -101,7 +77,7 @@ const Listing = () => {
         <Col lg={12} className='content'>
           <Row>
             <Col sm={12} md={8} lg={8}>
-              {/* {!loading && displayPosts()} */}
+              <Row>{!loading && displayPosts()}</Row>
             </Col>
             <Col sm={12} md={4} lg={4}>
               ads here
